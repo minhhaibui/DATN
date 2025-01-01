@@ -6,7 +6,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function CartPayment(props) {
-  const { carts, isCheckout, transportFee, onCheckout, isLoading } = props;
+  const {
+    carts,
+    isCheckout,
+    transportFee,
+    onCheckout,
+    isLoading,
+    voucher,
+  } = props;
   // giá tạm tính
   const tempPrice = carts.reduce((a, b) => a + b.price * b.amount, 0);
   console.log(tempPrice);
@@ -37,12 +44,31 @@ function CartPayment(props) {
         </span>
         <b>{helpers.formatProductPrice(totalDiscount)}</b>
       </div>
+      {voucher && (
+        <div className="d-flex justify-content-between m-b-6">
+          <span className="font-size-16px" style={{ color: '#aaa' }}>
+            Voucher giam gia
+          </span>
+          <b>{`${voucher.discountPercentage}%`}</b>
+        </div>
+      )}
       <div className="d-flex justify-content-between">
         <span className="font-size-16px" style={{ color: '#aaa' }}>
           Thành tiền
         </span>
-        <b style={{ color: 'red', fontSize: 20 }}>
-          {helpers.formatProductPrice(tempPrice - totalDiscount + transportFee)}
+        <b
+          style={{
+            color: 'red',
+            fontSize: 20,
+          }}>
+          {voucher
+            ? helpers.formatProductPrice(
+                (tempPrice - totalDiscount + transportFee) *
+                  (1 - voucher.discountPercentage / 100),
+              )
+            : helpers.formatProductPrice(
+                tempPrice - totalDiscount + transportFee,
+              )}
         </b>
       </div>
       <div className="t-end">

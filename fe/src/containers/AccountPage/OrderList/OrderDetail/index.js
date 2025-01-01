@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 
 function OrderDetail(props) {
   const { orderId, onClose } = props;
+  console.log(orderId, onClose);
   const [visible, setVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(null);
-
   // event: lấy chi tiết đơn hàng
   useEffect(() => {
     let isSubscribe = true;
+
     async function getOrderDetails() {
       try {
         const response = await orderApi.getOrderDetails(orderId);
@@ -28,6 +29,7 @@ function OrderDetail(props) {
         }
       }
     }
+
     getOrderDetails();
     return () => {
       isSubscribe = false;
@@ -166,7 +168,10 @@ function OrderDetail(props) {
                 <p style={{ color: '#bbb' }}>Tạm tính</p>
                 <span
                   className="m-l-32"
-                  style={{ color: '#888', minWidth: 180 }}>
+                  style={{
+                    color: '#888',
+                    minWidth: 180,
+                  }}>
                   {helpers.formatProductPrice(
                     order.orderProd.price * order.numOfProd -
                       (order.orderProd.price *
@@ -180,7 +185,10 @@ function OrderDetail(props) {
                 <p style={{ color: '#bbb' }}>Phí vận chuyển</p>
                 <span
                   className="m-l-32"
-                  style={{ color: '#888', minWidth: 180 }}>
+                  style={{
+                    color: '#888',
+                    minWidth: 180,
+                  }}>
                   {helpers.formatProductPrice(order.transportFee)}
                 </span>
               </div>
@@ -188,7 +196,10 @@ function OrderDetail(props) {
                 <p style={{ color: '#bbb' }}>Tổng cộng</p>
                 <span
                   className="m-l-32 font-size-18px"
-                  style={{ color: '#ff2000', minWidth: 180 }}>
+                  style={{
+                    color: '#ff2000',
+                    minWidth: 180,
+                  }}>
                   {helpers.formatProductPrice(helpers.calTotalOrderFee(order))}
                 </span>
               </div>

@@ -343,7 +343,16 @@ const postUpdateOrderStatus = async (req, res, next) => {
     return res.status(401).json({});
   }
 };
-
+const postUpdateOrderSeriNumber = async (req, res, next) => {
+  try {
+    const { id, serialNumbers } = req.body;
+    console.log("serialNumbers",serialNumbers)
+    const response = await OrderModel.updateOne({ _id: id }, { serialNumbers });
+    if (response) return res.status(200).json({});
+  } catch (error) {
+    return res.status(401).json({});
+  }
+};
 module.exports = {
   addProduct,
   getProductListByType,
@@ -356,4 +365,5 @@ module.exports = {
   delCustomer,
   getOrderList,
   postUpdateOrderStatus,
+  postUpdateOrderSeriNumber
 };

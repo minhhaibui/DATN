@@ -9,7 +9,8 @@ const morgan = require('morgan');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-
+const setupSocket=require("./src/configs/socketConfig")
+const http = require("http");
 // ! import local file
 const corsConfig = require('./src/configs/cors.config');
 const constants = require('./src/constants');
@@ -21,10 +22,14 @@ const productApi = require('./src/apis/product.api');
 const commentApi = require('./src/apis/comment.api');
 const userApi = require('./src/apis/user.api');
 const orderApi = require('./src/apis/order.api');
+const chatBoxApi = require('./src/apis/chatBox.api');
+const voucherApi = require('./src/apis/voucher.api');
+const warrantyApi = require('./src/apis/warranty.api');
 const statisticApi = require('./src/apis/statistic.api');
 
 // ! ================== set port ================== //
 const app = express();
+const server = http.createServer(app);
 const normalizePort = (port) => parseInt(port, 10);
 const PORT = normalizePort(process.env.PORT || 3000);
 
@@ -58,17 +63,23 @@ app.use(express.urlencoded({ limit: constants.MAX_SIZE_JSON_REQUEST }));
 app.use(cookieParser());
 app.use(cors(corsConfig));
 
+//socket config
 // ! ================== Listening ... ================== //
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT} !!`);
 });
 
+setupSocket(server);
 // ! ================== Routes - Api ================== //
 // api documentations
+
+
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // api trang admin
 app.use('/apis/admin', adminApi);
+
 
 // api liên quan đến address
 app.use('/apis/address', addressApi);
@@ -91,8 +102,16 @@ app.use('/apis/comments', commentApi);
 // api liên quan đơn hàng
 app.use('/apis/orders', orderApi);
 
+// api chat box
+app.use("/apis/chats", chatBoxApi);
+// api voucher
+app.use("/apis/vouchers", voucherApi);
+// api warranty
+app.use("/apis/warranty", warrantyApi);
+
 // api liên quản đến thống kê admin
 app.use('/apis/statistic', statisticApi);
+
 
 // Note: Khi deploy production, việc redirect các route sẽ để react giải quyết
 app.get('*', (req, res) => {

@@ -38,13 +38,17 @@ const orderSchema = new Schema({
 
   // số lượng
   numOfProd: { type: Number, required: true, default: 1 },
-
+  serialNumbers: { type: Array, required: true, default: [] },
+  vouchersDetails: {
+    id: {type: Schema.Types.ObjectId, required: true, ref: 'voucher'},
+    discountPercentage : {type: Number, required: true},
+  },
   // trạng thái đơn hàng
-  // 0 - Đặt hàng thành công, 1 - STORE đã tiếp nhận, 2 - Đang lấy hàng, 3 - Đóng gói xong
-  // 4 - Bàn giao vận chuyển, 5 - Đang vận chuyển, 6 - Giao hàng thành công
+  // 0 - Đặt hàng thành công, 1 - STORE đã tiếp nhận, 2 - Đóng gói xong
+  //  3 - Đang vận chuyển, 4 - Giao hàng thành công , 5 huy don hang
   orderStatus: {
     type: Number,
-    enum: [...Array(7).keys()],
+    enum: [...Array(6).keys()],
     required: true,
     default: 0,
   },

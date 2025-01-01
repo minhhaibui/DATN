@@ -1,4 +1,3 @@
-import { EyeOutlined } from '@ant-design/icons';
 import { Button, Spin, Table, Tooltip } from 'antd';
 import orderApi from 'apis/orderApi';
 import helpers from 'helpers';
@@ -6,12 +5,16 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import OrderDetail from './OrderDetail';
+import ServiceContract from '../../../components/serviceContract/serviceContract';
 
 // fn: tạo danh sách lọc cho trạng thái đơn hàng
 function generateOrderStaFilter() {
   let result = [];
   for (let i = 0; i < 7; ++i) {
-    result.push({ value: i, text: helpers.convertOrderStatus(i) });
+    result.push({
+      value: i,
+      text: helpers.convertOrderStatus(i),
+    });
   }
   return result;
 }
@@ -19,7 +22,12 @@ function generateOrderStaFilter() {
 function OrderList() {
   const [isLoading, setIsLoading] = useState(true);
   const [orderList, setOrderList] = useState([]);
+  console.log(orderList);
   const [orderDetails, setOrderDetails] = useState({
+    isOpen: false,
+    orderId: '',
+  });
+  const [serviceContract, setServiceContract] = useState({
     isOpen: false,
     orderId: '',
   });
@@ -35,7 +43,10 @@ function OrderList() {
         <Button
           type="link"
           onClick={() =>
-            setOrderDetails({ isOpen: true, orderId: records._id })
+            setOrderDetails({
+              isOpen: true,
+              orderId: records._id,
+            })
           }>
           <b>{orderCode}</b>
         </Button>
@@ -83,7 +94,26 @@ function OrderList() {
       onFilter: (value, record) => record.orderStatus === value,
       render: (orderStatus) => helpers.convertOrderStatus(orderStatus),
     },
+    {
+      title: 'Hành động',
+      dataIndex: 'ServiceContract',
+      key: 'ServiceContract',
+      render: (ServiceContract, records) => (
+        <Button
+          type="primary"
+          disabled={records.orderStatus !== 4}
+          onClick={() =>
+            setServiceContract({
+              isOpen: true,
+              orderId: records._id,
+            })
+          }>
+          Đăng ký bảo hành
+        </Button>
+      ),
+    },
   ];
+
   // fn: hiển thị danh sách đơn hàng
   function showOrderList(list) {
     return list && list.length === 0 ? (
@@ -106,6 +136,7 @@ function OrderList() {
   // event: Lấy danh sách
   useEffect(() => {
     let isSubscribe = true;
+
     async function getOrderList() {
       try {
         setIsLoading(true);
@@ -114,7 +145,10 @@ function OrderList() {
           const { list } = response.data;
           setOrderList(
             list.map((item, index) => {
-              return { ...item, key: index };
+              return {
+                ...item,
+                key: index,
+              };
             }),
           );
           setIsLoading(false);
@@ -126,6 +160,7 @@ function OrderList() {
         }
       }
     }
+
     if (user) getOrderList();
     return () => {};
   }, [user]);
@@ -144,6 +179,12 @@ function OrderList() {
         <OrderDetail
           orderId={orderDetails.orderId}
           onClose={() => setOrderDetails({ isOpen: false })}
+        />
+      )}
+      {serviceContract.isOpen && (
+        <ServiceContract
+          orderId={serviceContract.orderId}
+          onClose={() => setServiceContract({ isOpen: false })}
         />
       )}
     </>

@@ -33,22 +33,21 @@ function App() {
     if (isAuth) dispatch(userActions.getUserRequest());
     return () => {};
   }, [isAuth]);
-
+  console.log(location.pathname);
   //rendering...
   return (
     <BrowserRouter>
       <Suspense fallback={<GlobalLoading />}>
         <div className="App" id="app">
+          <ContactIcon />
           <HeaderView />
           <ScrollTo />
-          <ContactIcon />
           <Switch>
             {renderRoutes(routes)}
             <Route>
               <NotFound />
             </Route>
           </Switch>
-
           <FooterView />
         </div>
       </Suspense>

@@ -70,6 +70,14 @@ const adminApi = {
     const url = ADMIN_API_ENDPOINT + '/order';
     return axiosClient.post(url, { id, orderStatus });
   },
+  postUpdateOrderSeriNumber: (id, serialNumbers) => {
+    const url = ADMIN_API_ENDPOINT + '/order/seri';
+    return axiosClient.post(url, { id, serialNumbers });
+  },
+  postUpdateOrderProductSeri: (id, serialNumbers) => {
+    const url = ADMIN_API_ENDPOINT + '/order';
+    return axiosClient.post(url, { id, serialNumbers });
+  },
 };
 
 export default adminApi;

@@ -18,7 +18,7 @@ function generateLabels(
 }
 
 function AnnualRevenue() {
-  const startYear = 2010;
+  const startYear = 2018;
   const endYear = new Date().getFullYear();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

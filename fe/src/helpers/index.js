@@ -746,19 +746,29 @@ const convertOrderStatus = (orderStatus = 0) => {
     case 1:
       return 'Đã tiếp nhận';
     case 2:
-      return 'Đang lấy hàng';
-    case 3:
       return 'Đóng gói xong';
-    case 4:
-      return 'Đang giao vận chuyển';
-    case 5:
+    case 3:
       return 'Đang vận chuyển';
-    case 6:
+    case 4:
       return 'Giao hàng thành công';
-    case 7:
+    case 5:
       return 'Hủy đơn hàng';
     default:
       return 'Đặt hàng thành công';
+  }
+};
+const convertWarrantyStatus = (WarrantyStatus = 0) => {
+  switch (WarrantyStatus) {
+    case 0:
+      return 'Đăng ký thành công';
+    case 1:
+      return 'Đã tiếp nhận';
+    case 2:
+      return 'bảo hành thành công';
+    case 3:
+      return 'Hủy đơn bảo hành';
+    default:
+      return 'Đăng ký thành công';
   }
 };
 

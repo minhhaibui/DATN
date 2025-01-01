@@ -33,5 +33,6 @@ adminApi.get('/order', adminController.getOrderList);
 
 // api: cập nhật trạng thái đơn hàng
 adminApi.post('/order', adminController.postUpdateOrderStatus);
+adminApi.post('/order/seri', adminController.postUpdateOrderSeriNumber);
 
 module.exports = adminApi;

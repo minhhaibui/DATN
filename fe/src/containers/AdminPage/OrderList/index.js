@@ -8,6 +8,9 @@ import {
   Tooltip,
   Row,
   Col,
+  Tag,
+  Input,
+  Form,
 } from 'antd';
 import adminApi from 'apis/adminApi';
 import helpers from 'helpers';
@@ -16,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 function generateFilterOrder() {
   let result = [];
-  for (let i = 0; i < 8; ++i) {
+  for (let i = 0; i < 6; ++i) {
     result.push({ value: i, text: helpers.convertOrderStatus(i) });
   }
   return result;
@@ -26,8 +29,8 @@ function OrderList() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenUpdateSeri, setisModalOpenUpdateSeri] = useState(false);
   const [dataView, setDataView] = useState({});
-  console.log({ dataView });
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -59,6 +62,31 @@ function OrderList() {
     }
   };
 
+  const updateSerialNumbers = async (id, serialNumbers) => {
+    try {
+      const response = await adminApi.postUpdateOrderSeriNumber(
+        id,
+        serialNumbers,
+      );
+
+      if (response) {
+        message.success('Thêm thành cong');
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.orderId === id
+              ? {
+                  ...item,
+                  serialNumbers,
+                }
+              : { ...item },
+          ),
+        );
+      }
+    } catch (error) {
+      message.error('Cập nhật thất bại');
+    }
+  };
+  console.log('data', data);
   // modal cập nhật trạng thái đơn hàng
   function UpdateOrderStatusModal(
     defaultVal = 0,
@@ -66,6 +94,7 @@ function OrderList() {
     orderId,
     idProduct,
     totalMoney,
+    isHasSerialNumbers,
   ) {
     let valueCurr = defaultVal;
     const modal = Modal.info({
@@ -77,7 +106,11 @@ function OrderList() {
           onChange={(v) => (valueCurr = v.target.value)}
           className="m-t-12">
           {generateFilterOrder().map((item, index) => (
-            <Radio className="m-b-8" key={index} value={item.value}>
+            <Radio
+              className="m-b-8"
+              key={index}
+              value={item.value}
+              disabled={!isHasSerialNumbers && index >= 2}>
               {item.text}
             </Radio>
           ))}
@@ -161,10 +194,32 @@ function OrderList() {
       render: (value) => helpers.convertOrderStatus(value),
     },
     {
+      title: 'xac nhan so seri ',
+      render: (_v, records) => {
+        console.log('records', records?.serialNumbers?.length);
+        return records?.serialNumbers?.length <= 0 ? (
+          <>
+            <Button
+              type="dashed"
+              danger
+              onClick={() => {
+                setDataView(records);
+                setisModalOpenUpdateSeri(true);
+              }}>
+              Nhâp so seri
+            </Button>
+          </>
+        ) : (
+          <>
+            <Tag color={'green'}>da xac nhan</Tag>
+          </>
+        );
+      },
+    },
+    {
       title: '',
       render: (_v, records) => {
-        console.log(records);
-        return records.orderStatus !== 7 ? (
+        return records.orderStatus !== 6 ? (
           <Button
             type="dashed"
             onClick={() =>
@@ -174,6 +229,7 @@ function OrderList() {
                 records.orderId,
                 records.idProduct,
                 records.totalMoney,
+                records.serialNumbers.length > 0,
               )
             }>
             Cập nhật
@@ -185,6 +241,22 @@ function OrderList() {
     },
   ];
 
+  const [serialNumbers, setSerialNumbers] = useState([]);
+
+  const handleSerialChange = (value, index) => {
+    setSerialNumbers((prevSerialNumbers) => {
+      const updatedSerials = [...prevSerialNumbers];
+      updatedSerials[index] = value;
+      return updatedSerials;
+    });
+  };
+
+  const onOk = () => {
+    console.log('Danh sách số sê-ri đã nhập:', serialNumbers);
+    updateSerialNumbers(dataView.orderId, serialNumbers).then();
+    setisModalOpenUpdateSeri(false);
+    setSerialNumbers([]);
+  };
   useEffect(() => {
     let isSubscribe = true;
     async function getOrderList() {
@@ -206,9 +278,12 @@ function OrderList() {
                   (item.orderProd.price * item.orderProd.discount) / 100),
               paymentMethod: item.paymentMethod,
               orderStatus: item.orderStatus,
+              serialNumbers: item.serialNumbers,
               idProduct: item.orderProd.id,
               orderId: item._id,
               deliveryAdd: item.deliveryAdd,
+              numOfProd: item.numOfProd,
+              vouchers: item.vouchersDetails.discountPercentage,
             };
           });
           setData([...newList]);
@@ -223,7 +298,6 @@ function OrderList() {
       isSubscribe = false;
     };
   }, []);
-
   return (
     <>
       {isLoading ? (
@@ -244,7 +318,7 @@ function OrderList() {
             }}
             centered
             width={768}
-            footer={[<div></div>]}>
+            footer={<divs></divs>}>
             <div>
               <h1>Chi tiết đơn hàng</h1>
               <div>
@@ -307,10 +381,44 @@ function OrderList() {
               </div>
             </div>
           </Modal>
+
+          <Modal
+            visible={isModalOpenUpdateSeri}
+            closable={true}
+            maskClosable={false}
+            onCancel={() => {
+              setisModalOpenUpdateSeri(false), setSerialNumbers([]);
+            }}
+            onOk={onOk} // Gọi khi nhấn cập nhật
+            title={`Cập nhật số sê-ri cho đơn hàng #${dataView?.orderCode}`}
+            centered
+            width={768}>
+            <h1>Chi tiết đơn hàng</h1>
+            <p>
+              <strong>Sản phẩm:</strong> {dataView?.prodName}
+            </p>
+            <p>
+              <strong>Số lượng sản phẩm:</strong> {dataView?.numOfProd}
+            </p>
+
+            {[...Array(dataView.numOfProd)].map((_, index) => (
+              <div key={index} className="m-b-16">
+                <div>
+                  <strong>
+                    {dataView.prodName} #{index + 1}
+                  </strong>
+                </div>
+                <Input
+                  placeholder={`Nhập số sê-ri cho sản phẩm #${index + 1}`}
+                  value={serialNumbers[index] || ''} // Hiển thị giá trị từ state
+                  onChange={(e) => handleSerialChange(e.target.value, index)} // Cập nhật giá trị khi thay đổi
+                />
+              </div>
+            ))}
+          </Modal>
         </>
       )}
     </>
   );
 }
-
 export default OrderList;

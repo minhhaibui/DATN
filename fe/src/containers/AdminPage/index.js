@@ -8,6 +8,7 @@ import {
   PlusCircleOutlined,
   ReconciliationOutlined,
   ShoppingCartOutlined,
+  WechatOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
@@ -19,47 +20,64 @@ import React, { useState } from 'react';
 import Dashboard from './Dashboard';
 import './index.scss';
 import Login from './Login';
+import Chats from './Chats';
 const AddProduct = React.lazy(() => import('./ProductPage/ProductAddForm'));
 const SeeProduct = React.lazy(() => import('./ProductPage/SeeProduct'));
 const AdminUser = React.lazy(() => import('./AdminUser'));
 const CustomerList = React.lazy(() => import('./CustomersList'));
 const OrderList = React.lazy(() => import('./OrderList'));
+const WarrantyList = React.lazy(() => import('./Warranty/ListWarranty'));
 
 const mainColor = '#141428';
 const menuList = [
   {
     key: 'd',
-    title: 'Dashboard',
+    title: 'Bảng điều khiển',
     icon: <DashboardOutlined />,
     children: [],
   },
   {
     key: 'p',
-    title: 'Products',
+    title: 'Quản Lý Sản Phẩm',
     icon: <ShoppingCartOutlined />,
     children: [
-      { key: 'p0', title: 'See', icon: <EyeOutlined /> },
-      { key: 'p1', title: 'Add', icon: <PlusCircleOutlined /> },
+      { key: 'p0', title: 'Xem Danh Sách', icon: <EyeOutlined /> },
+      { key: 'p1', title: 'Thêm Sản Phẩm', icon: <PlusCircleOutlined /> },
     ],
   },
   {
     key: 'c',
-    title: 'Customers',
+    title: 'Quản lý Tài Khoản',
     icon: <UserOutlined />,
     children: [],
   },
   {
     key: 'a',
-    title: 'Amin Users',
+    title: 'Quản Lý Admin',
     icon: <IdcardOutlined />,
     children: [],
   },
   {
     key: 'o',
-    title: 'Order List',
+    title: 'Quản Lý Đơn Hàng',
     icon: <ReconciliationOutlined />,
     children: [],
-  }
+  },
+  {
+    key: 'w',
+    title: 'quản lý phiếu bảo hanh',
+    icon: <ReconciliationOutlined />,
+    children: [
+      { key: 'w0', title: 'Xem Danh Sách', icon: <EyeOutlined /> },
+      { key: 'w1', title: 'Thêm Sản Phẩm', icon: <PlusCircleOutlined /> },
+    ],
+  },
+  {
+    key: 'm',
+    title: 'Tin Nhắn',
+    icon: <WechatOutlined />,
+    children: [],
+  },
 ];
 
 function AdminPage() {
@@ -129,6 +147,10 @@ function AdminPage() {
         return <CustomerList />;
       case 'o':
         return <OrderList />;
+      case 'w0':
+        return <WarrantyList />;
+      case 'm':
+        return <Chats />;
       default:
         break;
     }

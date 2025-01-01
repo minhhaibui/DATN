@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import cartReducers from 'reducers/carts';
 import { ExceptionMap } from 'antd/lib/result';
+import Voucher from '../../components/Voucher';
 
 // fn: Lấy địa chỉ giao hàng của user theo index
 const getUserDeliveryAdd = async (userId, index = 0) => {
@@ -54,9 +55,9 @@ function PaymentPage() {
   const [isOrderSuccess, setIsOrderSuccess] = useState(false);
   const [payment, setPayment] = useState(0);
   const [notice, setNotice] = useState(1);
-
+  const [voucher, setVoucher] = useState(null);
   useEffect(() => {
-    if(user && isAuth) {
+    if (user && isAuth) {
       const fsplit = window.location.href.split('vnp_ResponseCode=');
       if (fsplit.length > 1) {
         const ss = fsplit[1].split('&')[0];
@@ -70,8 +71,7 @@ function PaymentPage() {
         }
       }
     }
-    
-  }, [user,isAuth]);
+  }, [user, isAuth]);
 
   // giá tạm tính
   const tempPrice = carts.reduce((a, b) => a + b.price * b.amount, 0);
@@ -103,7 +103,7 @@ function PaymentPage() {
       </Card>
     ));
   }
- 
+
   // event: đặt hàng
   const onCheckout = async () => {
     try {
@@ -144,7 +144,10 @@ function PaymentPage() {
             : constants.TRANSPORT_METHOD_OPTIONS.find(
                 (item) => item.value === transport,
               ).price;
-        const finalPrice = tempPrice - totalDiscount + transportFee;
+        const finalPrice = voucher
+          ? (tempPrice - totalDiscount + transportFee) *
+            (1 - voucher.discountPercentage / 100)
+          : tempPrice - totalDiscount + transportFee;
         const date = new Date();
         const createDate = moment()
           .utcOffset('+07:00')
@@ -188,17 +191,6 @@ function PaymentPage() {
           window.location.replace(vnpUrl);
         }
       } else {
-        console.log({
-          owner,
-          deliveryAdd,
-          paymentMethod,
-          orderStatus,
-          transportMethod,
-          transportFee,
-          orderDate,
-          productList,
-          note: note.current,
-        });
         const response = await orderApi.postCreateOrder({
           owner,
           deliveryAdd,
@@ -209,17 +201,18 @@ function PaymentPage() {
           orderDate,
           productList,
           note: note.current,
+          voucher,
         });
         if (response && response.status === 200) {
           setTimeout(() => {
             message.success('Đặt hàng thành công', 2);
             setIsLoading(false);
             setIsOrderSuccess(true);
-          window.history.replaceState('', '', '/payment');
-          dispatch(cartReducers.resetCart());
+            window.history.replaceState('', '', '/payment');
+            dispatch(cartReducers.resetCart());
           }, 1000);
         } else {
-          if(response?.message) {
+          if (response?.message) {
             message.error(response?.message, 3);
           } else {
             message.error('Đặt hàng thất bại, thử lại', 3);
@@ -297,7 +290,12 @@ function PaymentPage() {
                     onChecked={(value) => (addressIndex.current = value)}
                   />
                 </div>
-
+                <div className="p-12 bg-white bor-rad-8 m-tb-16">
+                  <Voucher
+                    userId={user._id}
+                    selectedVoucher={voucher}
+                    setSelectedVoucher={setVoucher}></Voucher>
+                </div>
                 {/* ghi chú */}
                 <div className="p-12 bg-white bor-rad-8">
                   <h2 className="m-b-8">Ghi chú cho đơn hàng</h2>
@@ -372,6 +370,7 @@ function PaymentPage() {
                     isCheckout={true}
                     transportFee={transportFee}
                     onCheckout={onCheckout}
+                    voucher={voucher}
                   />
                   <div className="t-center p-b-16">
                     <span
