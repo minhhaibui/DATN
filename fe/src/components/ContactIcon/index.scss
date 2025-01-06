@@ -12,14 +12,14 @@
 }
 .chat-box-container {
   position: fixed;
-  bottom: 20px;     // Đảm bảo chat box không bị che khuất
-  right: 80px;      // Đặt bên cạnh icon
-  z-index: 9999;    // Đảm bảo chat box hiển thị trên tất cả các phần tử khác
-  background-color: white; // Nếu muốn chat box có nền trắng
-  border: 1px solid #ddd; // Thêm viền cho chat box
-  border-radius: 8px; // Thêm bo góc cho chat box
-  width: 300px; // Chiều rộng của chat box
-  height: 400px; // Chiều cao của chat box
+  bottom: 20px;
+  right: 80px;
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 300px;
+  height: 400px; /
   overflow-y: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Thêm bóng cho chat box
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

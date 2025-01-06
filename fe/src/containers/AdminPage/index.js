@@ -21,6 +21,8 @@ import Dashboard from './Dashboard';
 import './index.scss';
 import Login from './Login';
 import Chats from './Chats';
+import Statistical from './Statistical';
+import AddWarranty from './Warranty/AddWarranty';
 const AddProduct = React.lazy(() => import('./ProductPage/ProductAddForm'));
 const SeeProduct = React.lazy(() => import('./ProductPage/SeeProduct'));
 const AdminUser = React.lazy(() => import('./AdminUser'));
@@ -61,21 +63,30 @@ const menuList = [
     key: 'o',
     title: 'Quản Lý Đơn Hàng',
     icon: <ReconciliationOutlined />,
-    children: [],
+    children: [
+      { key: 'o0', title: 'Xem Danh Sách', icon: <EyeOutlined /> },
+      { key: '01', title: 'Thêm Đơn Hàng', icon: <PlusCircleOutlined /> },
+    ],
   },
   {
     key: 'w',
-    title: 'quản lý phiếu bảo hanh',
+    title: 'Quản phiếu Bảo Hành',
     icon: <ReconciliationOutlined />,
     children: [
       { key: 'w0', title: 'Xem Danh Sách', icon: <EyeOutlined /> },
-      { key: 'w1', title: 'Thêm Sản Phẩm', icon: <PlusCircleOutlined /> },
+      { key: 'w1', title: 'Thêm Phiếu Bảo Hành', icon: <PlusCircleOutlined /> },
     ],
   },
   {
     key: 'm',
     title: 'Tin Nhắn',
     icon: <WechatOutlined />,
+    children: [],
+  },
+  {
+    key: 't',
+    title: 'Thống kê',
+    icon: <BarChartOutlined />,
     children: [],
   },
 ];
@@ -145,12 +156,16 @@ function AdminPage() {
         return <AdminUser />;
       case 'c':
         return <CustomerList />;
-      case 'o':
+      case 'o0':
         return <OrderList />;
       case 'w0':
         return <WarrantyList />;
+      case 'w1':
+        return <AddWarranty />;
       case 'm':
         return <Chats />;
+      case 't':
+        return <Statistical />;
       default:
         break;
     }

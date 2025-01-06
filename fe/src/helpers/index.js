@@ -815,4 +815,5 @@ export default {
   convertOrderStatus,
   convertPaymentMethod,
   calTotalOrderFee,
+  convertWarrantyStatus,
 };

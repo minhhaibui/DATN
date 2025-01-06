@@ -71,9 +71,7 @@ function ServiceContract(props) {
   };
 
   const handleDatePickerChange = (date, dateString) => {
-    // Lưu timestamp thay vì đối tượng moment
     const inputDate = new Date(date._d);
-    console.log(date._d);
     setForm((prevForm) => ({
       ...prevForm,
       warranty_date: dateString,
@@ -101,14 +99,14 @@ function ServiceContract(props) {
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       const formattedData = selectedRows.map((row) => ({
+        id: row.orderProd?.id,
         serial: row.serial,
         name: row.orderProd?.name,
         price: row.orderProd?.price,
         discount: row.orderProd?.discount,
-        id: row.orderProd?.id,
+        voucher: order.vouchersDetails.discountPercentage,
       }));
 
-      // Lưu vào form
       setForm((prev) => ({
         ...prev,
         productList: formattedData,
@@ -249,7 +247,7 @@ function ServiceContract(props) {
               onChange={handleDatePickerChange}
             />
             <Input.TextArea
-              name="note"
+              name="description"
               placeholder="Mô tả lỗi sản phẩm"
               value={form.note}
               onChange={handleInputChange}

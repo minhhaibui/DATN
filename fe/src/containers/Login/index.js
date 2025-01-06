@@ -29,9 +29,7 @@ function Login() {
     try {
       setIsSubmitting(false);
       message.success('Đăng nhập thành công');
-      // lưu refresh token vào local storage
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-      // Note: Lưu jwt vào localStorage nếu deploy heroku
       if (process.env.NODE_ENV === 'production')
         localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(authReducers.setIsAuth(true));

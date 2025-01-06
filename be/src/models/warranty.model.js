@@ -22,7 +22,7 @@ const warrantySchema = new Schema({
     required: true,
     default: 0,
   },
-  note: {
+  description: {
     type: String,
     default: ''
   } // Ghi chú thêm

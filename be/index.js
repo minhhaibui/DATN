@@ -65,11 +65,12 @@ app.use(cors(corsConfig));
 
 //socket config
 // ! ================== Listening ... ================== //
+setupSocket(server);
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT} !!`);
 });
 
-setupSocket(server);
+
 // ! ================== Routes - Api ================== //
 // api documentations
 

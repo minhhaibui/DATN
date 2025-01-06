@@ -16,22 +16,19 @@ const ChatRoom = ({ userId }) => {
   const messagesEndRef = useRef(null);
   const contentRef = useRef(null); // Tham chiếu đến khung nội dung tin nhắn
 
-  // Cuộn xuống cuối danh sách
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Kiểm tra nếu người dùng đang ở cuối danh sách
   const isAtBottom = () => {
     if (!contentRef.current) return true;
     const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
     return scrollHeight - scrollTop === clientHeight;
   };
 
-  // Xử lý sự kiện cuộn
   const handleScroll = () => {
     if (isAtBottom()) {
-      setHasUnreadMessages(false); // Ẩn thông báo nếu ở cuối danh sách
+      setHasUnreadMessages(false);
     }
   };
 
@@ -41,16 +38,16 @@ const ChatRoom = ({ userId }) => {
 
     socketConfig.on('chat_history', (history) => {
       setMessages(history);
-      scrollToBottom(); // Cuộn xuống cuối khi load lịch sử
+      scrollToBottom();
     });
 
     socketConfig.on('new_message', (message) => {
       setMessages((prev) => [...prev, message]);
 
       if (!isAtBottom()) {
-        setHasUnreadMessages(true); // Hiển thị thông báo nếu không ở cuối danh sách
+        setHasUnreadMessages(true);
       } else {
-        scrollToBottom(); // Cuộn xuống nếu đang ở cuối danh sách
+        scrollToBottom();
       }
     });
 
@@ -78,8 +75,7 @@ const ChatRoom = ({ userId }) => {
       <Content
         style={{ padding: '20px', overflowY: 'auto', position: 'relative' }}
         ref={contentRef}
-        onScroll={handleScroll} // Lắng nghe sự kiện cuộn
-      >
+        onScroll={handleScroll}>
         <MessageList messages={messages} userId={userId} />
         <div ref={messagesEndRef} />
         {hasUnreadMessages && (

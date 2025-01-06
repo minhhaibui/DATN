@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Form, Input, Button, Checkbox, message, Row, Col } from 'antd';
+import { Form, Input, Button, message, Row, Col } from 'antd';
 import adminApi from 'apis/adminApi';
 
 function Login(props) {

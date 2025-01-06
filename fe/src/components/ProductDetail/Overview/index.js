@@ -148,14 +148,15 @@ function ProductOverview(props) {
         {discount > 0 && price > 0 && (
           <>
             <h3 className="font-weight-700" style={{ color: '#333' }}>
-              Bạn có 1 mã giảm giá {discount}% cho sản phẩm này
+              Giảm giá {discount}%
             </h3>
             <div className="d-flex flex-direction-column m-t-8 m-b-16 p-tb-8 p-lr-16 discount">
               <span className="discount-price font-size-16px font-weight-700">
                 Giá: {helpers.formatProductPrice(price)}
               </span>
               <span>
-                Đã giảm thêm: {helpers.formatProductPrice(Math.abs(priceBefore - price))}
+                Đã giảm thêm:{' '}
+                {helpers.formatProductPrice(Math.abs(priceBefore - price))}
                 &nbsp;
                 <span className="discount-decr"></span>
               </span>

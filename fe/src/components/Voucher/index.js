@@ -6,11 +6,10 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const VoucherList = ({ userId, selectedVoucher, setSelectedVoucher }) => {
-  const [vouchers, setVouchers] = useState([]); // Voucher đã chọn
-  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
-  const [showVouchers, setShowVouchers] = useState(false); // Hiển thị danh sách voucher
+  const [vouchers, setVouchers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showVouchers, setShowVouchers] = useState(false);
 
-  // Fetch vouchers theo userId
   const fetchVouchers = async () => {
     if (!userId) {
       message.error('User ID is required!');
@@ -19,9 +18,9 @@ const VoucherList = ({ userId, selectedVoucher, setSelectedVoucher }) => {
 
     setLoading(true);
     try {
-      const response = await voucherApi.getVouchersByUserId(userId); // Gọi API để lấy danh sách voucher
+      const response = await voucherApi.getVouchersByUserId(userId);
       setVouchers(response.data.data);
-      setShowVouchers(true); // Hiển thị danh sách voucher
+      setShowVouchers(true);
     } catch (error) {
       console.error('Error fetching vouchers:', error);
       message.error('Failed to fetch vouchers.');
@@ -43,7 +42,7 @@ const VoucherList = ({ userId, selectedVoucher, setSelectedVoucher }) => {
       return;
     }
 
-    setSelectedVoucher(voucher); // Lưu voucher đã chọn vào state
+    setSelectedVoucher(voucher);
     message.success(`Selected voucher: ${voucher.discountPercentage}% off`);
   };
 
@@ -55,8 +54,7 @@ const VoucherList = ({ userId, selectedVoucher, setSelectedVoucher }) => {
       <Button
         type="primary"
         onClick={fetchVouchers}
-        disabled={loading || showVouchers} // Chỉ cho phép bấm nếu chưa load xong hoặc chưa hiện danh sách
-      >
+        disabled={loading || showVouchers}>
         Add Voucher
       </Button>
       {showVouchers && (

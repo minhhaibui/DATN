@@ -389,11 +389,10 @@ function OrderList() {
             onCancel={() => {
               setisModalOpenUpdateSeri(false), setSerialNumbers([]);
             }}
-            onOk={onOk} // Gọi khi nhấn cập nhật
+            onOk={onOk}
             title={`Cập nhật số sê-ri cho đơn hàng #${dataView?.orderCode}`}
             centered
             width={768}>
-            <h1>Chi tiết đơn hàng</h1>
             <p>
               <strong>Sản phẩm:</strong> {dataView?.prodName}
             </p>
@@ -410,8 +409,8 @@ function OrderList() {
                 </div>
                 <Input
                   placeholder={`Nhập số sê-ri cho sản phẩm #${index + 1}`}
-                  value={serialNumbers[index] || ''} // Hiển thị giá trị từ state
-                  onChange={(e) => handleSerialChange(e.target.value, index)} // Cập nhật giá trị khi thay đổi
+                  value={serialNumbers[index] || ''}
+                  onChange={(e) => handleSerialChange(e.target.value, index)}
                 />
               </div>
             ))}

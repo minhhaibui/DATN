@@ -100,10 +100,83 @@ const htmlWarningLogin = () => {
     <h1>Cảm ơn.</h1>
   </div>`;
 };
+// thông bao bảo hành
+const generateWarrantyEmailContent = (warrantyInfo) => {
+  const {
+    serialNumber,
+    customerName,
+    customerPhone,
+    customerAddress,
+    purchaseDate,
+    warrantyEndDate,
+    registrationDate,
+    productName,
+    color,
+    price,
+    discount,
+    voucher
+  } = warrantyInfo;
+
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <h2 style="color: #007bff;">Thông Tin Bảo Hành</h2>
+      <p>Kính gửi <strong>${customerName}</strong>,</p>
+      <p>Cảm ơn quý khách đã tin tưởng và sử dụng sản phẩm của chúng tôi. Dưới đây là thông tin bảo hành chi tiết:</p>
+      <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Số Seri</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${serialNumber}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Tên Sản Phẩm</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${productName}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Màu Sắc</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${color}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Giá</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${price.toLocaleString()} VND</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Giảm Giá</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${(discount * 100).toFixed(2)}%</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Voucher</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${voucher.toLocaleString()} VND</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Ngày Mua</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${purchaseDate}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Ngày Đăng Ký Bảo Hành</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${registrationDate}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Ngày Hết Hạn Bảo Hành</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${warrantyEndDate}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Tổng Cộng</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px;">${(price - (price * discount) - voucher).toLocaleString()} VND</td>
+        </tr>
+      </table>
+<p>Chúng tôi kính mong quý khách mang thiết bị đến trực tiếp cửa hàng vào ngày <strong>${registrationDate}</strong> tại địa chỉ: <strong>${customerAddress}</strong>, để đội ngũ kỹ thuật viên của chúng tôi có thể hỗ trợ kiểm tra và xử lý một cách nhanh chóng và hiệu quả nhất.</p>
+<p>Nếu quý khách có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua số điện thoại: <strong>${customerPhone}</strong> hoặc địa chỉ: <strong>${customerAddress}</strong>.</p>
+<p>Trân trọng,</p>
+<p>Đội Ngũ Hỗ Trợ Khách Hàng</p>
+
+    </div>
+  `;
+};
 
 module.exports = {
   sendEmail,
   htmlSignupAccount,
   htmlResetPassword,
   htmlWarningLogin,
+  generateWarrantyEmailContent
 };
